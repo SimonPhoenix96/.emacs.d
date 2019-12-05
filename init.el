@@ -110,7 +110,7 @@ There are two things you can do about this warning:
     ("c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
  '(package-selected-packages
    (quote
-    (powerline grandshell-theme howdoi org-cliplink org-jira org-edna))))
+    (helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -119,3 +119,14 @@ There are two things you can do about this warning:
  )
 
 ;;;;;;;;;;;;end of org-mode config;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;SMEX;;;;;;;;
+  (require 'smex) ; Not needed if you use package.el
+  (smex-initialize) ; Can be omitted. This might cause a (minimal) delay
+	            ; when Smex is auto-initialized on its first run.
+;;Key Bindings;;
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+  ;; This is your old M-x.
+  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
