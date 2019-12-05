@@ -37,7 +37,8 @@
 (add-hook 'org-shiftright-final-hook 'windmove-right)
 
 ;; THEMES
-
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme `wilmersdorf t)
 
 ;;;;;;;;;MELPA package Manager stuff;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'package)
@@ -98,7 +99,12 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (misterioso)))
+ '(ansi-color-names-vector
+   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(custom-enabled-themes (quote (wilmersdorf)))
+ '(custom-safe-themes
+   (quote
+    ("6d19d236838fd93e73c66718d91a4f6ffb57223e8d1c1fbd19879190b3b6f7fa" default)))
  '(org-agenda-files
    (quote
     ("c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
