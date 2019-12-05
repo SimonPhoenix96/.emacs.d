@@ -110,7 +110,7 @@ There are two things you can do about this warning:
     ("c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
  '(package-selected-packages
    (quote
-    (grandshell-theme howdoi org-cliplink org-jira org-edna))))
+    (powerline grandshell-theme howdoi org-cliplink org-jira org-edna))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
