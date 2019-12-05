@@ -101,14 +101,16 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(custom-enabled-themes (quote (wilmersdorf)))
+ '(custom-enabled-themes (quote (grandshell)))
  '(custom-safe-themes
    (quote
-    ("6d19d236838fd93e73c66718d91a4f6ffb57223e8d1c1fbd19879190b3b6f7fa" default)))
+    ("3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "6d19d236838fd93e73c66718d91a4f6ffb57223e8d1c1fbd19879190b3b6f7fa" default)))
  '(org-agenda-files
    (quote
     ("c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
- '(package-selected-packages (quote (howdoi org-cliplink org-jira org-edna))))
+ '(package-selected-packages
+   (quote
+    (grandshell-theme howdoi org-cliplink org-jira org-edna))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
