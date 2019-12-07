@@ -31,23 +31,21 @@
 ;; set line numbers
 (line-number-mode 1)
 
-;;maxframe
+;; reinit last session
+(desktop-save-mode 1)
+(savehist-mode 1)
+(add-to-list 'savehist-additional-variables 'kill-ring) ;; for example
+
+
 ;; Start fullscreen (cross-platf)
 (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
 
 
 ;; SHORTCUTS
-;;; Winmove
-(when (fboundp 'windmove-default-keybindings)
-  (windmove-default-keybindings))
-;;;; Make windmove work in Org mode:
-(add-hook 'org-shiftup-final-hook 'windmove-up)
-(add-hook 'org-shiftleft-final-hook 'windmove-left)
-(add-hook 'org-shiftdown-final-hook 'windmove-down)
-(add-hook 'org-shiftright-final-hook 'windmove-right)
 ;; org-agenda shortcut (C a t)
 (global-set-key "\C-ca" 'org-agenda)
+
 ;; THEMES
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme `grandshell t)
@@ -124,7 +122,7 @@ There are two things you can do about this warning:
     ("c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
  '(package-selected-packages
    (quote
-    (centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
+    (elscreen centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -145,3 +143,6 @@ There are two things you can do about this warning:
   (global-set-key (kbd "M-X") 'smex-major-mode-commands);; This is your old M-x.
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+
+;;;;;;;;;elscreen;;;;;
+(elscreen-start)
