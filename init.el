@@ -31,10 +31,9 @@
 ;; set line numbers
 (line-number-mode 1)
 
-
-
-
-
+;;maxframe
+;; Start fullscreen (cross-platf)
+(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
 
 
 
@@ -53,6 +52,13 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme `grandshell t)
 
+
+
+
+
+
+
+;;;;;;;;;;PLUGINS;;;;;;;;;;;
 ;;;;;;;;;MELPA package Manager stuff;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -118,7 +124,7 @@ There are two things you can do about this warning:
     ("c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
  '(package-selected-packages
    (quote
-    (sublimity centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
+    (maxframe sublimity centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
