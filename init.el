@@ -78,9 +78,18 @@ There are two things you can do about this warning:
 (package-initialize)
 
 
+;;; File Embedder
+(defun org-insert-file (filename)
+  "Insert Elisp code block recreating file named FILENAME."
+  (interactive "f")
+  (let ((base64-string
+	 (with-temp-buffer
+	   (insert-file-contents-literally filename)
+	   (base64-encode-region (point-min) (point-max))
+	   (buffer-string))))
+	(insert (format "#+BEGIN_SRC emacs-lisp :results output silent\n  (with-temp-file %S\n    (insert (base64-decode-string\n      %S)))\n#+END_SRC" filename base64-string))))
+
 ;;;;;;;;;;;;;;;;;;;;;EMACS MODES CONFIG;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
 ;; Enable Powershell
 (require 'powershell)
@@ -105,6 +114,79 @@ There are two things you can do about this warning:
 
 (ido-mode 1)
 
+;; ORG-SUPER-AGENDA
+(require 'org-super-agenda)
+(org-super-agenda-mode t)
+(setq org-agenda-time-grid '((daily today require-timed) "----------------------" nil)
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-include-diary t
+      org-agenda-block-separator nil
+      org-agenda-compact-blocks t
+      org-agenda-start-with-log-mode t)
+(setq org-agenda-custom-commands
+      '(("z" "Super zaen view"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                                :time-grid t
+                                :date today
+                                :todo "TODAY"
+                                :scheduled today
+                                :order 1)))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-super-agenda-groups
+                        '((:name "Next to do"
+                                 :todo "NEXT"
+                                 :order 1)
+			  (:name "Study"
+                                 :tag "Study"
+                                 :order 3)
+			  (:name "Important"
+                                 :tag "Important"
+                                 :priority "A"
+                                 :order 6)
+                          (:name "Due Today"
+                                 :deadline today
+                                 :order 2)
+                          (:name "Due Soon"
+                                 :deadline future
+                                 :order 8)
+			  (:name "Exam Dates"
+				 :tag "ExamDates"
+                                 :order 99)
+			  (:name "Overdue"
+                                 :deadline past
+                                 :order 7)
+                          (:name "Assignments"
+                                 :tag "Assignment"
+                                 :order 10)
+                          (:name "Issues"
+                                 :tag "Issue"
+                                 :order 12)
+                          (:name "Projects"
+                                 :tag "Projects"
+                                 :order 14)
+                          (:name "Emacs"
+                                 :tag "Emacs"
+                                 :order 13)
+                          (:name "Research"
+                                 :tag "Research"
+                                 :order 15)
+                          (:name "To read"
+                                 :tag "Read"
+                                 :order 30)
+                          (:name "Waiting"
+                                 :todo "WAITING"
+                                 :order 20)
+                          (:name "trivial"
+                                 :priority<= "C"
+                                 :tag ("Trivial" "Unimportant")
+                                 :todo ("SOMEDAY" )
+                                 :order 90)
+                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+
 ;; Files belonging to org-mode Agenda
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -119,10 +201,10 @@ There are two things you can do about this warning:
     ("3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "6d19d236838fd93e73c66718d91a4f6ffb57223e8d1c1fbd19879190b3b6f7fa" default)))
  '(org-agenda-files
    (quote
-    ("c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
+    ("c:/Users/jd/Dropbox/Files/study.org" "c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
  '(package-selected-packages
    (quote
-    (elscreen centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
+    (org-super-agenda twittering-mode ## elscreen centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
