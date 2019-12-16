@@ -1,4 +1,4 @@
-;; -*- mode: elisp -*-
+;;; EMACS CONFIG ;;;
 
 ;; init logging
 (message "Starting Emacs %s" emacs-version)
@@ -23,11 +23,6 @@
 ;; Enable transient mark mode
 (transient-mark-mode 1)
 
-;;; AUTOSTART ;;;
-;; Open org-agenda at start
-(add-hook 'after-init-hook 'org-todo-list)
-(add-hook 'after-init-hook 'powerline-center-theme)
-
 ;; set line numbers
 (line-number-mode 1)
 
@@ -36,28 +31,36 @@
 (savehist-mode 1)
 (add-to-list 'savehist-additional-variables 'kill-ring) ;; for example
 
-
 ;; Start fullscreen (cross-platf)
-(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+;(add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+
+;; remove top menubar
+(menu-bar-mode -1)
+
+;; Enable Powershell
+(require 'powershell)
+
+;; Enable Ido Mode
+(ido-mode 1)
 
 
+;;; AUTOSTART ;;;
+(add-hook 'after-init-hook 'org-todo-list)
+(add-hook 'after-init-hook 'powerline-center-theme)
 
-;; SHORTCUTS
+
+;;; SHORTCUTS ;;;
 ;; org-agenda shortcut (C a t)
 (global-set-key "\C-ca" 'org-agenda)
 
-;; THEMES
+
+
+;;; THEMES ;;;
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme `grandshell t)
 
-
-
-
-
-
-
-;;;;;;;;;;PLUGINS;;;;;;;;;;;
-;;;;;;;;;MELPA package Manager stuff;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; PLUGINS ;;;
+;;; MELPA Package Manager ;;;
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -76,9 +79,8 @@ There are two things you can do about this warning:
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
-
-
-;;; File Embedder
+      
+;;; File Embedder ;;;
 (defun org-insert-file (filename)
   "Insert Elisp code block recreating file named FILENAME."
   (interactive "f")
@@ -89,103 +91,19 @@ There are two things you can do about this warning:
 	   (buffer-string))))
 	(insert (format "#+BEGIN_SRC emacs-lisp :results output silent\n  (with-temp-file %S\n    (insert (base64-decode-string\n      %S)))\n#+END_SRC" filename base64-string))))
 
-;;;;;;;;;;;;;;;;;;;;;EMACS MODES CONFIG;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Enable Powershell
-(require 'powershell)
 
 
-;;;;Org mode configuration;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; Org Mode Configuration ;;;
 ;; Enable Org mode
 (require 'org)
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-;; The above is the default in recent emacsen
 
 (setq org-todo-keywords
   '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
 
 (setq org-tag-alist '(("@work" . ?w) ("@home" . ?h) ("study" . ?l)))
-
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(package-initialize)
-
-(ido-mode 1)
-
-;; ORG-SUPER-AGENDA
-(require 'org-super-agenda)
-(org-super-agenda-mode t)
-(setq org-agenda-time-grid '((daily today require-timed) "----------------------" nil)
-      org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-include-diary t
-      org-agenda-block-separator nil
-      org-agenda-compact-blocks t
-      org-agenda-start-with-log-mode t)
-(setq org-agenda-custom-commands
-      '(("z" "Super zaen view"
-         ((agenda "" ((org-agenda-span 'day)
-                      (org-super-agenda-groups
-                       '((:name "Today"
-                                :time-grid t
-                                :date today
-                                :todo "TODAY"
-                                :scheduled today
-                                :order 1)))))
-          (alltodo "" ((org-agenda-overriding-header "")
-                       (org-super-agenda-groups
-                        '((:name "Next to do"
-                                 :todo "NEXT"
-                                 :order 1)
-			  (:name "Study"
-                                 :tag "Study"
-                                 :order 3)
-			  (:name "Important"
-                                 :tag "Important"
-                                 :priority "A"
-                                 :order 6)
-                          (:name "Due Today"
-                                 :deadline today
-                                 :order 2)
-                          (:name "Due Soon"
-                                 :deadline future
-                                 :order 8)
-			  (:name "Exam Dates"
-				 :tag "ExamDates"
-                                 :order 99)
-			  (:name "Overdue"
-                                 :deadline past
-                                 :order 7)
-                          (:name "Assignments"
-                                 :tag "Assignment"
-                                 :order 10)
-                          (:name "Issues"
-                                 :tag "Issue"
-                                 :order 12)
-                          (:name "Projects"
-                                 :tag "Projects"
-                                 :order 14)
-                          (:name "Emacs"
-                                 :tag "Emacs"
-                                 :order 13)
-                          (:name "Research"
-                                 :tag "Research"
-                                 :order 15)
-                          (:name "To read"
-                                 :tag "Read"
-                                 :order 30)
-                          (:name "Waiting"
-                                 :todo "WAITING"
-                                 :order 20)
-                          (:name "trivial"
-                                 :priority<= "C"
-                                 :tag ("Trivial" "Unimportant")
-                                 :todo ("SOMEDAY" )
-                                 :order 90)
-                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 
 ;; Files belonging to org-mode Agenda
 (custom-set-variables
@@ -201,10 +119,10 @@ There are two things you can do about this warning:
     ("3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "6d19d236838fd93e73c66718d91a4f6ffb57223e8d1c1fbd19879190b3b6f7fa" default)))
  '(org-agenda-files
    (quote
-    ("c:/Users/jd/Dropbox/Files/study.org" "c:/Users/jd/Dropbox/Files/emacsSetup.org" "c:/Users/jd/Dropbox/Files/thoughts.org" "c:/Users/jd/Dropbox/Files/portfolio.org")))
+    ("c:/Users/jd/Dropbox/Files/work.org" "c:/Users/jd/Dropbox/Files/study.org" "c:/Users/jd/Dropbox/Files/portfolio.org" "~/.org-jira/SC.org" "~/.org-jira/OIS.org" "~/.org-jira/ELSS.org")))
  '(package-selected-packages
    (quote
-    (org-super-agenda twittering-mode ## elscreen centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
+    (pcre2el org-super-agenda twittering-mode ## elscreen centaur-tabs helm-smex smex powerline grandshell-theme howdoi org-cliplink org-jira org-edna)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -213,10 +131,98 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  )
 
-;;;;;;;;;;;;end of org-mode config;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; REGEX Builder ;;;
+(defun pcre-regexp-from-list-of-words (words)
+  "insert a pcre regexp to match a list of words"
+  (interactive "sList of words for regexp: ")
+  (insert
+   (pcre-to-elisp
+    (regexp-opt (split-string words)))))
+(global-set-key (kbd "C-c R") 'pcre-regexp-from-list-of-words)
 
 
-;;;;;;;;;SMEX;;;;;;;;
+;;; ORG-SUPER-AGENDA ;;;
+(require 'org-super-agenda)
+(org-super-agenda-mode t)
+
+
+(setq spacemacs-theme-org-agenda-height nil
+      org-agenda-time-grid '((daily today require-timed) "----------------------" nil)
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-include-diary t
+      org-agenda-block-separator nil
+      org-agenda-compact-blocks t
+      org-agenda-start-with-log-mode t)
+
+(setq org-agenda-custom-commands
+      '(("z" "Super zaen view"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                                :time-grid t
+                                :date today
+                                :todo "TODAY"
+                                :scheduled today
+                                :order 1)))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-super-agenda-groups
+                        '(
+
+			
+			  
+			  (:name "Study"
+                                 :tag ("Study" "Daily")
+                                 :order 1)
+
+			  (:name "Overdue"
+                                 :deadline past			      
+                                 :order 2)			  
+
+			  (:name "Due Today"
+                                 :deadline today
+                                 :order 3)
+                          (:name "Due Soon"
+                                 :deadline future
+                                 :order 4)
+
+			 
+                          (:name "Personal Projects"
+                                 :tag "Projects"
+                                 :order 9)
+                          (:name "Emacs"
+                                 :tag "Emacs"
+                                 :order 10)
+                          (:name "To read"
+                                 :tag "Read"
+                                 :order 11)
+
+					  
+			   (:name "Work"
+                                 :tag "work"
+                                 :order 5)
+			  
+			  (:name "Orpheus_SC"
+                                 :regexp "SC_"
+                                 :order 6)
+			  (:name "Orpheus_ELSS"
+                                 :regexp "ELSS_"
+                                 :order 7)
+		          (:name "Orpheus_OIS"
+                                 :regexp "OIS_"
+                                 :order 8)
+
+			  
+			   (:name "Exam Dates"
+				 :tag "ExamDates"
+                                 :order 99)
+			  
+                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+
+
+;;; SMEX ;;;
   (require 'smex) ; Not needed if you use package.el
   (smex-initialize) ; Can be omitted. This might cause a (minimal) delay
 	            ; when Smex is auto-initialized on its first run.
@@ -226,5 +232,11 @@ There are two things you can do about this warning:
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 
-;;;;;;;;;elscreen;;;;;
+;;; elscreen ;;;
 (elscreen-start)
+
+;;; org-jira ;;;
+(setq jiralib-url "https://orpheus.jira.com")
+(require 'org-jira)
+
+
