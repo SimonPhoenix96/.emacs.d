@@ -21,7 +21,7 @@
 (add-hook 'after-init-hook 'global-company-mode)
 
 ;; activate and configure helm mode
-;;(helm-mode 1)
+(helm-mode 1)
 
 ;; elpy 
 (elpy-enable)
@@ -346,5 +346,8 @@ There are two things you can do about this warning:
 ;;; elscreen ;;;
 ;;(elscreen-start)
 
-
+;;; org-jira ;;;
+;(setq jiralib-url "https://orpheus.jira.com")
+;(require 'org-jira)
+;(setq org-jira-working-dir "~/.emacs.d/files/org-jira")
 
