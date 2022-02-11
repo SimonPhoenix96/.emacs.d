@@ -1,10 +1,59 @@
+;; init logging
+(message "Starting Emacs %s" emacs-version)
+(add-hook 'after-init-hook (lambda () (message "Initialization complete after %s" (emacs-init-time))) t)
+
 ;; General Settings
 (setq default-directory "~/.emacs.d/files")
 (setq default-input-method "nil")
+(add-to-list 'load-path "/home/jd/.emacs.d/site-lisp/")
 
-(require 'simpleclip)
+;;(require 'simpleclip)
+
+(global-diff-hl-mode)
+
+(unless (window-system) (diff-hl-margin-mode))
 
 (simpleclip-mode 1)
+
+(rainbow-mode 1)
+
+;; company is an auto complete pkg
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; activate and configure helm mode
+;;(helm-mode 1)
+
+;; elpy 
+(elpy-enable)
+
+;; shows possible completions of keybindings
+(which-key-mode 1)
+
+
+;; centaur tabs
+(require 'centaur-tabs)
+(centaur-tabs-mode t)
+(global-set-key (kbd "S-<next>")  'centaur-tabs-backward)
+(global-set-key (kbd "S-<prior>") 'centaur-tabs-forward)
+
+
+;; smartparens which autocompletes parantheses/quotes
+(require 'smartparens-config)
+(smartparens-global-mode t)
+
+
+;; all-the-icons-dired (project tree sidebar)
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
+;; in prog-modes auto enable rainbow delimiters
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+;; zoom which auto manages windows sizes
+(custom-set-variables
+ '(zoom-mode t))
+
+;; word wrap stuff
+(global-visual-line-mode t)
 
 ;; Makes *scratch* empty.
 (setq initial-scratch-message "")
@@ -39,9 +88,6 @@
 (add-to-list 'default-frame-alist '(alpha . (95 . 100)))
 
 
-;; init logging
-(message "Starting Emacs %s" emacs-version)
-(add-hook 'after-init-hook (lambda () (message "Initialization complete after %s" (emacs-init-time))) t)
 
 ;; minimal UI
 (setq-default visible-bell t)
@@ -88,25 +134,53 @@
 ;; remove top menubar
 (menu-bar-mode -1)
 
-;; Enable Powershell
-;; (require 'powershell)
-
-;; Enable Ido Mode
-(ido-mode 1)
-
 
 ;;; AUTOSTART ;;;
-;(add-hook 'after-init-hook 'org-todo-list)
-;(add-hook 'after-init-hook 'powerline-center-theme)
+
 (add-hook 'after-init-hook (lambda () (org-agenda nil "z")))
 
-;;; SHORTCUTS ;;;
+;;; KEYBINDS ;;;
 ;; org-agenda shortcut (C a t)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key (kbd "C-c <left>")  'windmove-left)
 (global-set-key (kbd "C-c <right>") 'windmove-right)
 (global-set-key (kbd "C-c <up>")    'windmove-up)
 (global-set-key (kbd "C-c <down>")  'windmove-down)
+
+;; helm keybindings
+
+;;(define-key input-decode-map "^[x" [(meta x)])
+;;(global-set-key [(meta x)] 'helm-M-x)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+
+;; dire project tree view bindings
+(define-key input-decode-map "^B" [(ctrl b)])
+(global-set-key [(control b)] 'dired-sidebar-toggle-sidebar)
+
+;; fix broken movement keybindings when in emacs -nw (console) mode
+(define-key input-decode-map "[1;5C" [(control right)])
+(define-key input-decode-map "[1;5D" [(control left)])
+
+(define-key input-decode-map "[1;3C" [(meta right)])
+(define-key input-decode-map "[1;3D" [(meta left)])
+
+(define-key input-decode-map "[1;3A" [(meta up)])
+(define-key input-decode-map "[1;3B" [(meta down)])
+
+(global-set-key [(control right)] 'forward-word)
+(global-set-key [(control left)] 'backward-word)
+
+(global-set-key [(meta right)] 'forward-word)
+(global-set-key [(meta left)] 'backward-word)
+
+(global-set-key [(meta up)] 'drag-stuff-up)
+(global-set-key [(meta down)] 'drag-stuff-down)
+
+
+
+
 
 
 ;;; THEMES ;;;
@@ -140,7 +214,7 @@ There are two things you can do about this warning:
   (interactive "f")
   (let ((base64-string
 	 (with-temp-buffer
-R	   (insert-file-contents-literally filename)
+	   (insert-file-contents-literally filename)
 	   (base64-encode-region (point-min) (point-max))
 	   (buffer-string))))
 	(insert (format "#+BEGIN_SRC emacs-lisp :results output silent\n  (with-temp-file %S\n    (insert (base64-decode-string\n      %S)))\n#+END_SRC" filename base64-string))))
@@ -153,6 +227,9 @@ R	   (insert-file-contents-literally filename)
 (require 'org)
 ;; Make Org mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+
+;; auto collapse everything in org-mode files
+(setq org-startup-folded t)
 
 (setq org-todo-keywords
   '((sequence "FUTURE" "TODO" "NEXT" "IN-PROGRESS" "WAITING" "DONE")))
@@ -171,16 +248,21 @@ R	   (insert-file-contents-literally filename)
  '(custom-enabled-themes '(grandshell))
  '(custom-safe-themes
    '("3e335d794ed3030fefd0dbd7ff2d3555e29481fe4bbb0106ea11c660d6001767" "cc0dbb53a10215b696d391a90de635ba1699072745bf653b53774706999208e3" "3860a842e0bf585df9e5785e06d600a86e8b605e5cc0b74320dfe667bcbe816c" "039c01abb72985a21f4423dd480ddb998c57d665687786abd4e16c71128ef6ad" default))
+ '(minimap-dedicated-window nil)
+ '(minimap-hide-fringes t)
+ '(minimap-minimum-width 30)
+ '(minimap-mode f)
+ '(minimap-window-location 'right)
  '(org-agenda-files '("~/.emacs.d/files/"))
  '(package-selected-packages
-   '(minimal-theme leuven-theme docker simpleclip sudo-edit py-autopep8 jedi elpy powershell bug-hunter pcre2el org-super-agenda twittering-mode ## elscreen centaur-tabs powerline grandshell-theme howdoi org-cliplink org-jira org-edna))
+   '(zoom smartparens which-key dired-sidebar all-the-icons-dired all-the-icons magit shell-pop web-mode rainbow-delimiters ng2-mode tide lsp-mode minimap drag-stuff diff-hl xclip minimal-theme leuven-theme simpleclip sudo-edit py-autopep8 jedi elpy bug-hunter pcre2el org-super-agenda twittering-mode ## centaur-tabs powerline grandshell-theme howdoi org-cliplink org-edna))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(minimap-font-face ((t (:height 17 :family "DejaVu Sans Mono")))))
 
 
 ;;; REGEX Builder ;;;
@@ -252,24 +334,17 @@ R	   (insert-file-contents-literally filename)
 
 
 
-;;; SMEX ;;;
+;;; SMEX  ;;;
 ;  (require 'smex) ; Not needed if you use package.el
 ;  (smex-initialize) ; Can be omitted. This might cause a (minimal) delay
 	            ; when Smex is auto-initialized on its first run.
-;;Key Bindings;;
-  (global-set-key (kbd "M-x") 'smex)
-  (global-set-key (kbd "M-X") 'smex-major-mode-commands);; This is your old M-x.
-  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands);; This is your old M-x.
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 
 ;;; elscreen ;;;
-(elscreen-start)
+;;(elscreen-start)
 
-;;; org-jira ;;;
-;(setq jiralib-url "https://orpheus.jira.com")
-;(require 'org-jira)
-;(setq org-jira-working-dir "~/.emacs.d/files/org-jira")
 
-;;; elpy ;;:
-(elpy-enable)
-;;;;
+
